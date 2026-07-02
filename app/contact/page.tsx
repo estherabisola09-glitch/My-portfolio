@@ -1,11 +1,11 @@
 import Navbar from "@/Components/Nav-bar";
-import Hero from "@/Components/Hero";
+import Contact from "@/Components/Contact";
 
-export default function Home() {
+export default function ContactPage() {
   return (
     <main className="grid-bg">
       <Navbar />
-      <Hero />
+      <Contact />
     </main>
   );
 }

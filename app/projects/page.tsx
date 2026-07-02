@@ -1,11 +1,10 @@
 import Navbar from "@/Components/Nav-bar";
-import Hero from "@/Components/Hero";
-
-export default function Home() {
+import Projects from "@/Components/Projects";
+export default function ProjectsPage() {
   return (
     <main className="grid-bg">
       <Navbar />
-      <Hero />
+      <Projects />
     </main>
   );
 }
