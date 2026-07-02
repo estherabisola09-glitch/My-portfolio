@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Victory & Tamilore — Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wine:#5C1A2B;
+    --wine-deep:#3E0F1C;
+    --ice:#A9C2D9;
+    --ice-soft:#D7E3EE;
+    --cream:#F7F3EC;
+    --gold:#C6A45C;
+    --gold-soft:#E4D2A6;
+    --ink:#1B1414;
+    --max:1080px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Jost',sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  h1,h2,h3,.serif{font-family:'Cormorant Garamond',serif;}
+  .eyebrow{
+    font-family:'Jost',sans-serif;
+    font-size:0.72rem;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    color:var(--gold);
+    font-weight:500;
+  }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;}
+  img{max-width:100%;display:block;}
+
+  .container{max-width:var(--max);margin:0 auto;padding:0 28px;}
+
+  /* ================= LETTER INTRO ================= */
+  #envelope-screen{
+    position:fixed;inset:0;
+    background:linear-gradient(135deg,var(--wine-deep),var(--wine) 55%,var(--wine-deep));
+    z-index:999;
+    display:flex;align-items:center;justify-content:center;
+    transition:opacity 1s ease, visibility 1s ease;
+  }
+  #envelope-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+
+  .stage{
+    position:relative;width:min(360px,82vw);height:min(460px,62vh);
+  }
+
+  /* envelope body, stays put */
+  .env-pocket{
+    position:absolute;left:0;right:0;bottom:0;
+    height:62%;
+    background:linear-gradient(160deg,#C7D8E7,var(--ice) 60%, #9FBBD3);
+    border-radius:4px 4px 8px 8px;
+    box-shadow:0 30px 60px rgba(0,0,0,0.45);
+    z-index:2;
+    overflow:hidden;
+  }
+  .env-pocket::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:100%;
+    background:linear-gradient(135deg, transparent 49%, rgba(0,0,0,0.06) 50%, transparent 51%),
+               linear-gradient(45deg, transparent 49%, rgba(0,0,0,0.06) 50%, transparent 51%);
+  }
+  .env-flap-top{
+    position:absolute;left:0;right:0;top:0;height:50%;
+    background:linear-gradient(150deg,#D7E3EE,var(--ice));
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top center;
+    transition:transform 0.9s cubic-bezier(.6,-0.15,.2,1.2);
+    z-index:4;
+  }
+  .seal{
+    position:absolute;top:18%;left:50%;
+    width:54px;height:54px;
+    background:radial-gradient(circle at 35% 30%,#7a2438,var(--wine-deep) 75%);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 14px rgba(0,0,0,0.4), inset 0 0 0 2px rgba(212,175,109,0.5);
+    z-index:5;
+    transition:opacity 0.4s ease, transform 0.4s ease;
+  }
+  .seal span{
+    font-family:'Cormorant Garamond',serif;color:var(--gold-soft);
+    font-size:1rem;font-style:italic;
+  }
+
+  /* the letter that slides up out of the pocket */
+  .letter{
+    position:absolute;left:6%;right:6%;bottom:6%;
+    height:88%;
+    background:var(--cream);
+    border:1px solid var(--gold-soft);
+    border-radius:2px;
+    box-shadow:0 18px 40px rgba(0,0,0,0.25);
+    z-index:3;
+    transform:translateY(8%);
+    transition:transform 1.1s cubic-bezier(.2,.8,.2,1) 0.55s;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;
+    padding:24px 18px;
+    overflow:hidden;
+  }
+  .letter .invite-eyebrow{
+    font-size:0.64rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);
+    opacity:0;transform:translateY(10px);
+    transition:opacity 0.6s ease 1.5s, transform 0.6s ease 1.5s;
+  }
+  .letter .invite-line{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:clamp(1.6rem,7vw,2.1rem);color:var(--wine);
+    margin-top:14px;
+    opacity:0;transform:translateY(10px);
+    transition:opacity 0.7s ease 1.8s, transform 0.7s ease 1.8s;
+  }
+  .letter .invite-names{
+    font-family:'Cormorant Garamond',serif;font-weight:500;
+    font-size:clamp(1.7rem,8vw,2.3rem);color:var(--wine-deep);
+    margin-top:10px;
+    opacity:0;transform:translateY(10px);
+    transition:opacity 0.7s ease 2.1s, transform 0.7s ease 2.1s;
+  }
+  .letter .invite-tap{
+    margin-top:22px;font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--ink);opacity:0;
+    transition:opacity 0.6s ease 2.6s;
+  }
+
+  .stage.opened .env-flap-top{transform:rotateX(180deg);}
+  .stage.opened .seal{opacity:0;transform:translate(-50%,-50%) scale(0.4);}
+  .stage.opened .letter{transform:translateY(-46%);}
+  .stage.opened .letter .invite-eyebrow,
+  .stage.opened .letter .invite-line,
+  .stage.opened .letter .invite-names,
+  .stage.opened .letter .invite-tap{opacity:1;transform:translateY(0);}
+
+  .stage:not(.opened){cursor:pointer;}
+  .tap-hint{
+    position:absolute;bottom:-44px;left:0;right:0;text-align:center;
+    color:var(--ice-soft);font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;
+    animation:pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
+
+  /* ================= MAIN SITE ================= */
+  #site{opacity:0; transition:opacity 0.9s ease;}
+  #site.show{opacity:1;}
+
+  .hero{
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;
+    position:relative;
+    background:
+      radial-gradient(ellipse at top, rgba(169,194,217,0.35), transparent 60%),
+      linear-gradient(180deg,var(--cream),var(--cream) 80%, #fff);
+    padding:120px 24px 80px;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background-image: repeating-linear-gradient(45deg, rgba(92,26,43,0.025) 0 2px, transparent 2px 40px);
+    pointer-events:none;
+  }
+  .petal{
+    position:absolute;top:-20px;
+    width:10px;height:10px;border-radius:60% 0;
+    background:var(--wine);
+    opacity:0.5;
+    animation:fall linear infinite;
+    pointer-events:none;
+  }
+  @keyframes fall{
+    0%{transform:translateY(0) translateX(0) rotate(0deg);opacity:0;}
+    10%{opacity:0.55;}
+    100%{transform:translateY(110vh) translateX(40px) rotate(280deg);opacity:0;}
+  }
+  .hero .ornament{
+    width:1px;height:64px;background:linear-gradient(var(--gold),transparent);
+    margin:0 auto 28px;position:relative;z-index:1;
+  }
+  .hero .names{
+    font-size:clamp(3rem,9vw,6.2rem);
+    font-weight:500;line-height:1.05;color:var(--wine-deep);
+    position:relative;z-index:1;
+  }
+  .hero .names em{
+    font-style:italic;font-weight:300;color:var(--gold);
+    font-size:0.6em;display:inline-block;margin:0 0.25em;
+  }
+  .hero .date-line{
+    margin-top:26px;font-size:0.9rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--wine);
+    position:relative;z-index:1;
+  }
+  .hero .date-line span{color:var(--gold);margin:0 10px;}
+
+  .countdown{margin-top:46px;display:flex;gap:clamp(18px,4vw,42px);position:relative;z-index:1;}
+  .countdown .unit{text-align:center;}
+  .countdown .num{
+    font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.6rem);
+    color:var(--wine-deep);font-weight:600;
+  }
+  .countdown .lbl{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-top:4px;}
+
+  .scroll-cue{
+    position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+    font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--wine);opacity:0.55;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+  }
+  .scroll-cue::after{
+    content:"";width:1px;height:28px;background:var(--wine);
+    animation:scrolldown 1.8s ease-in-out infinite;
+  }
+  @keyframes scrolldown{0%{transform:scaleY(0);opacity:0;}50%{transform:scaleY(1);opacity:1;}100%{transform:scaleY(0);opacity:0;transform-origin:bottom;}}
+
+  section{padding:110px 0;position:relative;}
+  .section-head{text-align:center;margin-bottom:64px;}
+  .section-head h2{font-size:clamp(2.2rem,4.5vw,3.2rem);color:var(--wine-deep);font-weight:500;margin-top:10px;}
+  .divider{width:46px;height:1px;background:var(--gold);margin:18px auto 0;}
+
+  /* ---- couple photos ---- */
+  .couple-photos{background:var(--cream);}
+  .photo-grid{
+    display:grid;grid-template-columns:1.1fr 0.9fr;gap:20px;
+    max-width:920px;margin:0 auto;
+  }
+  .photo-grid .ph{position:relative;border-radius:4px;overflow:hidden;box-shadow:0 20px 50px rgba(92,26,43,0.15);}
+  .photo-grid .ph img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-grid .ph.tall{grid-row:span 2;aspect-ratio:4/5.2;}
+  .photo-grid .ph.short{aspect-ratio:4/2.4;}
+  .ph-tag{
+    position:absolute;bottom:0;left:0;right:0;
+    background:linear-gradient(0deg,rgba(27,20,20,0.78),transparent);
+    color:#fff;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;
+    padding:18px 14px 10px;
+  }
+  .placeholder-note{
+    max-width:520px;margin:30px auto 0;text-align:center;
+    font-size:0.82rem;color:var(--wine);opacity:0.8;
+    background:var(--ice-soft);border-radius:6px;padding:14px 20px;
+  }
+
+  /* ---- itinerary ---- */
+  .itinerary{background:linear-gradient(180deg,#fff,var(--cream));}
+  .itin-day{max-width:760px;margin:0 auto 64px;}
+  .itin-day:last-child{margin-bottom:0;}
+  .itin-day-head{
+    display:flex;align-items:baseline;gap:16px;margin-bottom:28px;
+    border-bottom:1px solid var(--gold-soft);padding-bottom:14px;
+  }
+  .itin-day-head .day-tag{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.8rem;color:var(--wine);
+  }
+  .itin-day-head .day-date{font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink);opacity:0.55;}
+  .itin-row{
+    display:grid;grid-template-columns:90px 1fr;gap:18px;
+    padding:16px 0;
+    border-bottom:1px dashed rgba(92,26,43,0.12);
+  }
+  .itin-row:last-child{border-bottom:none;}
+  .itin-time{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--gold);font-size:1.05rem;}
+  .itin-detail h4{font-size:1.15rem;color:var(--wine-deep);font-weight:500;}
+  .itin-detail p{font-size:0.85rem;color:var(--ink);opacity:0.65;margin-top:4px;line-height:1.6;}
+
+  /* ---- venues w/ maps ---- */
+  .venues{background:#fff;}
+  .venue-card{
+    max-width:880px;margin:0 auto 48px;
+    display:grid;grid-template-columns:1fr 1fr;
+    border:1px solid var(--gold-soft);border-radius:8px;overflow:hidden;
+    box-shadow:0 16px 40px rgba(92,26,43,0.08);
+  }
+  .venue-card:last-child{margin-bottom:0;}
+  .venue-info{padding:32px 30px;display:flex;flex-direction:column;justify-content:center;}
+  .venue-info .eyebrow{margin-bottom:8px;}
+  .venue-info h3{font-size:1.5rem;color:var(--wine-deep);font-weight:500;}
+  .venue-info .addr{font-size:0.88rem;color:var(--ink);opacity:0.7;margin-top:10px;line-height:1.6;}
+  .venue-info .ghost-btn{margin-top:18px;align-self:flex-start;}
+  .venue-map{min-height:240px;background:var(--ice-soft);}
+  .venue-map iframe{width:100%;height:100%;min-height:240px;border:0;display:block;}
+  @media (max-width:760px){
+    .venue-card{grid-template-columns:1fr;}
+    .venue-map{order:-1;}
+  }
+
+  /* ---- story ---- */
+  .story{background:var(--cream);}
+  .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  .story-text p{font-size:1.02rem;line-height:1.85;color:var(--ink);opacity:0.85;font-weight:300;}
+  .story-text p + p{margin-top:18px;}
+  .story-frame{
+    aspect-ratio:4/5;border-radius:4px;position:relative;overflow:hidden;
+    box-shadow:0 20px 50px rgba(92,26,43,0.12);
+  }
+  .story-frame img{width:100%;height:100%;object-fit:cover;}
+
+  /* ---- gallery ---- */
+  .gallery{background:var(--wine-deep);color:var(--cream);}
+  .gallery .section-head h2{color:var(--cream);}
+  .gallery .eyebrow{color:var(--gold-soft);}
+  .gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:160px;gap:14px;}
+  .gallery-grid .tile{
+    position:relative;border-radius:3px;overflow:hidden;
+    border:1px solid rgba(212,175,109,0.25);
+  }
+  .gallery-grid .tile img{width:100%;height:100%;object-fit:cover;}
+  .gallery-grid .tile .cap{
+    position:absolute;bottom:0;left:0;right:0;
+    background:linear-gradient(0deg,rgba(0,0,0,0.7),transparent);
+    color:var(--gold-soft);font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;
+    padding:14px 10px 8px;
+  }
+  .gallery-grid .tile:nth-child(1){grid-column:span 2;grid-row:span 2;}
+  .gallery-grid .tile:nth-child(4){grid-column:span 2;}
+  .upload-note{text-align:center;margin-top:34px;font-size:0.85rem;opacity:0.65;}
+
+  /* ---- rsvp ---- */
+  .rsvp{background:var(--cream);}
+  .rsvp-box{
+    max-width:560px;margin:0 auto;background:#fff;border:1px solid var(--gold-soft);
+    border-radius:6px;padding:48px clamp(24px,6vw,56px);box-shadow:0 30px 70px rgba(92,26,43,0.1);
+  }
+  .field{margin-bottom:22px;}
+  .field label{display:block;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--wine);margin-bottom:8px;}
+  .field input,.field select,.field textarea{
+    width:100%;border:none;border-bottom:1px solid var(--ice);background:transparent;
+    padding:10px 2px;font-family:'Jost',sans-serif;font-size:0.98rem;color:var(--ink);
+    transition:border-color 0.3s;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-bottom-color:var(--wine);}
+  .radio-row{display:flex;gap:22px;}
+  .radio-row label{display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--ink);text-transform:none;letter-spacing:0;font-weight:300;}
+  .submit-btn{
+    width:100%;padding:15px;margin-top:10px;background:var(--wine);color:var(--cream);
+    font-size:0.78rem;letter-spacing:0.25em;text-transform:uppercase;border-radius:3px;
+    transition:background 0.3s, transform 0.2s;
+  }
+  .submit-btn:hover{background:var(--wine-deep);}
+  .submit-btn:active{transform:scale(0.98);}
+  .submit-btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+  .rsvp-success{display:none;text-align:center;padding:20px 0;}
+  .rsvp-success.show{display:block;}
+  .rsvp-success .serif{font-size:1.6rem;color:var(--wine);font-style:italic;}
+
+  /* ---- gifting ---- */
+  .gifting{background:linear-gradient(180deg,var(--cream),#fff);}
+  .gift-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;max-width:980px;margin:0 auto;}
+  .gift-card{
+    background:#fff;border:1px solid var(--gold-soft);border-radius:6px;padding:34px 28px;text-align:center;
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .gift-card:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(92,26,43,0.12);}
+  .gift-card .icon{
+    width:46px;height:46px;margin:0 auto 18px;border-radius:50%;background:var(--ice-soft);
+    display:flex;align-items:center;justify-content:center;color:var(--wine);
+    font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;
+  }
+  .gift-card h3{font-size:1.35rem;color:var(--wine-deep);font-weight:500;margin-bottom:10px;}
+  .gift-card p{font-size:0.88rem;color:var(--ink);opacity:0.75;line-height:1.6;margin-bottom:20px;}
+  .gift-card .price{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--gold);font-weight:600;margin-bottom:18px;}
+  .ghost-btn{
+    display:inline-block;padding:11px 26px;border:1px solid var(--wine);color:var(--wine);
+    font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;border-radius:3px;
+    transition:background 0.3s,color 0.3s;
+  }
+  .ghost-btn:hover{background:var(--wine);color:var(--cream);}
+  .bank-note{max-width:560px;margin:54px auto 0;text-align:center;font-size:0.85rem;color:var(--ink);opacity:0.65;line-height:1.8;}
+  .bank-note .acct{margin-top:14px;font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--wine);letter-spacing:0.04em;}
+
+  /* ---- guestbook ---- */
+  .guestbook{background:var(--ice-soft);}
+  .gb-form{max-width:620px;margin:0 auto 56px;background:#fff;border-radius:6px;padding:30px;border:1px solid rgba(92,26,43,0.08);}
+  .gb-form textarea{min-height:90px;resize:vertical;}
+  .gb-feed{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:18px;}
+  .gb-msg{background:#fff;border-radius:6px;padding:20px 24px;border-left:3px solid var(--gold);box-shadow:0 8px 24px rgba(92,26,43,0.06);}
+  .gb-msg .who{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--wine);font-size:1.1rem;}
+  .gb-msg .msg{font-size:0.92rem;color:var(--ink);opacity:0.8;margin-top:6px;line-height:1.6;}
+  .gb-empty{text-align:center;opacity:0.55;font-size:0.9rem;padding:20px;}
+
+  footer{background:var(--wine-deep);color:var(--ice-soft);text-align:center;padding:64px 24px 40px;}
+  footer .serif{font-size:2rem;color:var(--cream);}
+  footer .small{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;opacity:0.6;margin-top:14px;}
+
+  /* ---- lively reveal: rise + gentle sway ---- */
+  .reveal{opacity:0;transform:translateY(30px) rotate(-0.6deg);transition:opacity 0.9s cubic-bezier(.2,.7,.3,1.4), transform 0.9s cubic-bezier(.2,.7,.3,1.4);}
+  .reveal.in{opacity:1;transform:translateY(0) rotate(0deg);}
+  .reveal:nth-child(odd).in{transition-delay:0.05s;}
+  .reveal:nth-child(even).in{transition-delay:0.14s;}
+
+  @media (max-width:880px){
+    .story-grid{grid-template-columns:1fr;gap:36px;}
+    .story-frame{order:-1;}
+    .gift-grid{grid-template-columns:1fr;}
+    .gallery-grid{grid-template-columns:repeat(2,1fr);}
+    .gallery-grid .tile:nth-child(1){grid-column:span 2;}
+    .photo-grid{grid-template-columns:1fr;}
+    .photo-grid .ph.tall{aspect-ratio:4/3.2;}
+    section{padding:80px 0;}
+  }
+  @media (max-width:520px){
+    .radio-row{flex-direction:column;gap:10px;}
+    .countdown{gap:16px;}
+    .itin-row{grid-template-columns:70px 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- LETTER-OPENING INTRO -->
+<div id="envelope-screen">
+  <div class="stage" id="stage">
+    <div class="letter">
+      <div class="invite-eyebrow">Together with their families</div>
+      <div class="invite-line">You are invited</div>
+      <div class="invite-names">Victory & Tamilore</div>
+      <div class="invite-tap">Tap to open</div>
+    </div>
+    <div class="env-pocket"></div>
+    <div class="env-flap-top">
+      <div class="seal"><span>V&amp;T</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="site">
+
+  <!-- HERO -->
+  <section class="hero" id="heroSection">
+    <div class="eyebrow">Together with their families</div>
+    <div class="ornament"></div>
+    <h1 class="names">Victory <em>&amp;</em> Tamilore</h1>
+    <div class="date-line">Saturday <span>•</span> 21st November 2026 <span>•</span> Lagos</div>
+
+    <div class="countdown" id="countdown">
+      <div class="unit"><div class="num" id="cd-days">00</div><div class="lbl">Days</div></div>
+      <div class="unit"><div class="num" id="cd-hours">00</div><div class="lbl">Hours</div></div>
+      <div class="unit"><div class="num" id="cd-mins">00</div><div class="lbl">Mins</div></div>
+      <div class="unit"><div class="num" id="cd-secs">00</div><div class="lbl">Secs</div></div>
+    </div>
+
+    <div class="scroll-cue">Scroll</div>
+  </section>
+
+  <!-- COUPLE PHOTOS -->
+  <section class="couple-photos">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">The Couple</div>
+        <h2>Victory & Tamilore</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="photo-grid reveal">
+        <div class="ph tall">
+          <img src="https://images.pexels.com/photos/2253870/pexels-photo-2253870.jpeg" alt="Sample placeholder couple photo">
+          <div class="ph-tag">Sample photo — replace with your own</div>
+        </div>
+        <div class="ph short">
+          <img src="https://images.pexels.com/photos/1024991/pexels-photo-1024991.jpeg" alt="Sample placeholder couple photo">
+          <div class="ph-tag">Sample photo — replace with your own</div>
+        </div>
+        <div class="ph short">
+          <img src="https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg" alt="Sample placeholder couple photo">
+          <div class="ph-tag">Sample photo — replace with your own</div>
+        </div>
+      </div>
+      <!-- <div class="placeholder-note reveal">These are free stock placeholder photos. Swap them for Victory & Tamilore's real pictures before sending.</div> -->
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story">
+    <div class="container story-grid">
+      <div class="story-text reveal">
+        <div class="eyebrow">Our Story</div>
+        <h2 style="margin-top:10px;margin-bottom:22px;font-size:2.4rem;color:var(--wine-deep);">A love worth the wait</h2>
+        <p>What began as a quiet conversation at a mutual friend's gathering became years of laughter, partnership, and quiet certainty. Adaeze and Emeka invite you to witness the next chapter — the one they've been writing toward all along.</p>
+        <p>Your presence, your prayers, and your blessings mean more to us than any gift ever could. We can't wait to celebrate this day surrounded by the people who shaped our story.</p>
+      </div>
+      <div class="story-frame reveal">
+        <video src="https://www.pexels.com/download/video/6308559/" width= "600" alt="Sample placeholder couple photo" width:>
+      </div>
+    </div>
+  </section>
+
+  <!-- ITINERARY -->
+  <section class="itinerary">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Save These Moments</div>
+        <h2>Wedding Itinerary</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="itin-day reveal">
+        <div class="itin-day-head">
+          <div class="day-tag">Day One</div>
+          <div class="day-date">Friday, 20 November 2026</div>
+        </div>
+        <div class="itin-row">
+          <div class="itin-time">12:00pm</div>
+          <div class="itin-detail"><h4>Guest Arrival</h4><p>Doors open at The Grand Atrium. Light refreshments served.</p></div>
+        </div>
+        <div class="itin-row">
+          <div class="itin-time">1:00pm</div>
+          <div class="itin-detail"><h4>Traditional Engagement Ceremony</h4><p>Bride price presentation, family introductions, and traditional rites.</p></div>
+        </div>
+        <div class="itin-row">
+          <div class="itin-time">3:00pm</div>
+          <div class="itin-detail"><h4>Cultural Dance &amp; Music</h4><p>Live cultural performances followed by open dancing.</p></div>
+        </div>
+        <div class="itin-row">
+          <div class="itin-time">4:30pm</div>
+          <div class="itin-detail"><h4>Reception Close</h4><p>Photos with the couple and send-off.</p></div>
+        </div>
+      </div>
+
+      <div class="itin-day reveal">
+        <div class="itin-day-head">
+          <div class="day-tag">Day Two</div>
+          <div class="day-date">Saturday, 21 November 2026</div>
+        </div>
+        <div class="itin-row">
+          <div class="itin-time">9:00am</div>
+          <div class="itin-detail"><h4>Guest Seating</h4><p>Please be seated at St. Augustine's Cathedral by 9:30am.</p></div>
+        </div>
+        <div class="itin-row">
+          <div class="itin-time">10:00am</div>
+          <div class="itin-detail"><h4>White Wedding Ceremony</h4><p>Exchange of vows, rings, and the church blessing.</p></div>
+        </div>
+        <div class="itin-row">
+          <div class="itin-time">12:30pm</div>
+          <div class="itin-detail"><h4>Couple's Photo Session</h4><p>Private portraits with immediate family at the cathedral gardens.</p></div>
+        </div>
+        <div class="itin-row">
+          <div class="itin-time">2:00pm</div>
+          <div class="itin-detail"><h4>Reception Begins</h4><p>Grand entrance, toasts, dinner service at The Pearl Ballroom.</p></div>
+        </div>
+        <div class="itin-row">
+          <div class="itin-time">4:00pm</div>
+          <div class="itin-detail"><h4>First Dance &amp; Cake Cutting</h4><p>Followed by an evening of dancing and celebration.</p></div>
+        </div>
+        <div class="itin-row">
+          <div class="itin-time">8:00pm</div>
+          <div class="itin-detail"><h4>Send-Off</h4><p>Couple's grand exit. Thank you for celebrating with us.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VENUES + MAPS -->
+  <section class="venues">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Where to Find Us</div>
+        <h2>Venue Locations</h2>
+        <div class="divider"></div>
+      </div>
+
+      <div class="venue-card reveal">
+        <div class="venue-info">
+          <div class="eyebrow">Day One</div>
+          <h3>The Grand Atrium</h3>
+          <div class="addr">12 Adeola Odeku Street,<br>Victoria Island, Lagos</div>
+          <a class="ghost-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=The+Grand+Atrium+Victoria+Island+Lagos">Get Directions</a>
+        </div>
+        <div class="venue-map">
+          <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Victoria%20Island%2C%20Lagos&t=&z=14&ie=UTF8&iwloc=&output=embed"></iframe>
+        </div>
+      </div>
+
+      <div class="venue-card reveal">
+        <div class="venue-info">
+          <div class="eyebrow">Day Two — Ceremony</div>
+          <h3>St. Augustine's Cathedral</h3>
+          <div class="addr">4 Awolowo Road,<br>Ikoyi, Lagos</div>
+          <a class="ghost-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=St+Augustine%27s+Cathedral+Ikoyi+Lagos">Get Directions</a>
+        </div>
+        <div class="venue-map">
+          <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Ikoyi%2C%20Lagos&t=&z=14&ie=UTF8&iwloc=&output=embed"></iframe>
+        </div>
+      </div>
+
+      <div class="venue-card reveal">
+        <div class="venue-info">
+          <div class="eyebrow">Day Two — Reception</div>
+          <h3>The Pearl Ballroom, Eko Hotel</h3>
+          <div class="addr">Plot 1415 Adetokunbo Ademola Street,<br>Victoria Island, Lagos</div>
+          <a class="ghost-btn" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=Eko+Hotel+Victoria+Island+Lagos">Get Directions</a>
+        </div>
+        <div class="venue-map">
+          <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Eko%20Hotel%2C%20Victoria%20Island%2C%20Lagos&t=&z=14&ie=UTF8&iwloc=&output=embed"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Memories</div>
+        <h2>Our Gallery</h2>
+        <div class="divider" style="background:var(--gold-soft);"></div>
+      </div>
+      <div class="gallery-grid reveal">
+        <div class="tile"><img src="https://images.pexels.com/photos/1024994/pexels-photo-1024994.jpeg" alt="Placeholder"><div class="cap">Engagement Shoot</div></div>
+        <div class="tile"><img src="https://images.pexels.com/photos/2253871/pexels-photo-2253871.jpeg" alt="Placeholder"><div class="cap">Proposal Day</div></div>
+        <div class="tile"><img src="https://images.pexels.com/photos/1024992/pexels-photo-1024992.jpeg" alt="Placeholder"><div class="cap">Pre-Wedding</div></div>
+        <div class="tile"><img src="https://images.pexels.com/photos/2253872/pexels-photo-2253872.jpeg" alt="Placeholder"><div class="cap">Family</div></div>
+        <div class="tile"><img src="https://images.pexels.com/photos/1024995/pexels-photo-1024995.jpeg" alt="Placeholder"><div class="cap">Traditional Intro</div></div>
+        <div class="tile"><img src="https://images.pexels.com/photos/2253873/pexels-photo-2253873.jpeg" alt="Placeholder"><div class="cap">First Trip</div></div>
+        <div class="tile"><img src="https://images.pexels.com/photos/1024996/pexels-photo-1024996.jpeg" alt="Placeholder"><div class="cap">Behind the Scenes</div></div>
+      </div>
+      <p class="upload-note">Sample placeholder photos — replace each tile with your own images.</p>
+    </div>
+  </section>
+
+  <!-- RSVP -->
+  <section class="rsvp">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Kindly Respond</div>
+        <h2>RSVP</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="rsvp-box reveal">
+        <form id="rsvpForm">
+          <div class="field">
+            <label for="rsvp-name">Full Name</label>
+            <input id="rsvp-name" type="text" required placeholder="e.g. Chioma Okafor">
+          </div>
+          <div class="field">
+            <label for="rsvp-guests">Number of Guests</label>
+            <select id="rsvp-guests">
+              <option>Just me</option>
+              <option>myself and family</option>
+              <option>myself and 2 guests</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Will you be attending?</label>
+            <div class="radio-row">
+              <label><input type="radio" name="attend" value="yes" checked> Joyfully Accept</label>
+              <label><input type="radio" name="attend" value="no"> Unavoidably absent</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="rsvp-note">A note for the couple (optional)</label>
+            <textarea id="rsvp-note" placeholder="Leave a wish, prayer, or message..."></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Send RSVP</button>
+        </form>
+        <div class="rsvp-success" id="rsvpSuccess">
+          <div class="serif">Thank you!</div>
+          <p style="margin-top:10px;font-size:0.9rem;opacity:0.75;">Your response has been recorded. We can't wait to celebrate with you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASO-EBI & GIFTS -->
+  <section class="gifting">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">With Love</div>
+        <h2>Aso-Ebi &amp; Gifts</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="gift-grid reveal">
+        <div class="gift-card">
+          <div class="icon">A</div>
+          <h3>Aso-Ebi Fabric</h3>
+          <p>Reserve your wine red or ice blue aso-ebi set ahead of the celebration.</p>
+          <div class="price">₦45,000</div>
+          <a href="#" class="ghost-btn">Reserve Yours</a>
+        </div>
+        <div class="gift-card">
+          <div class="icon">G</div>
+          <h3>Gift the Couple</h3>
+          <!-- <p>Help us start our home together with a contribution toward our registry.</p> -->
+          <div class="price">Any Amount</div>
+          <a href="#" class="ghost-btn">Send a Gift</a>
+        </div>
+        <div class="gift-card">
+          <div class="icon">M</div>
+          <h3>Memory Keepsake</h3>
+          <p>Upload your photos from the day into our shared digital memory book.</p>
+          <div class="price">Free</div>
+          <a href="#" class="ghost-btn">Add Photos</a>
+        </div>
+      </div>
+      <div class="bank-note reveal">
+        For direct transfers
+        <div class="acct">Victory &amp; Tamilore's Wedding Account — 0123456789, Zenith Bank</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUESTBOOK -->
+  <section class="guestbook">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Leave Your Blessing</div>
+        <h2>Guestbook</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="gb-form reveal">
+        <form id="gbForm">
+          <div class="field">
+            <label for="gb-name">Your Name</label>
+            <input id="gb-name" type="text" required placeholder="Your name">
+          </div>
+          <div class="field" style="margin-bottom:14px;">
+            <label for="gb-message">Your Message</label>
+            <textarea id="gb-message" required placeholder="Share a blessing or well-wish for the couple..."></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Post Message</button>
+        </form>
+      </div>
+      <div class="gb-feed reveal" id="gbFeed">
+        <div class="gb-empty">Be the first to leave a blessing for the couple.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="serif"> Victory &amp; Tamilore</div>
+    <div class="small">21 · 11 · 2026 — With love, always</div>
+  </footer>
+
+</div>
+
+<script>
+  // Letter-opening intro
+  const stage = document.getElementById('stage');
+  const envScreen = document.getElementById('envelope-screen');
+  const site = document.getElementById('site');
+  stage.addEventListener('click', () => {
+    if(stage.classList.contains('opened')) return;
+    stage.classList.add('opened');
+    setTimeout(() => {
+      envScreen.classList.add('hidden');
+      site.classList.add('show');
+    }, 2400);
+  });
+
+  // Falling petals in hero (dancing motion, not 3D)
+  const hero = document.getElementById('heroSection');
+  for(let i=0;i<14;i++){
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random()*100 + '%';
+    p.style.animationDuration = (6 + Math.random()*6) + 's';
+    p.style.animationDelay = (Math.random()*6) + 's';
+    p.style.background = i % 2 === 0 ? 'var(--wine)' : 'var(--ice)';
+    hero.appendChild(p);
+  }
+
+  // Countdown
+  const weddingDate = new Date('2026-11-21T10:00:00').getTime();
+  function tick(){
+    const now = Date.now();
+    let diff = weddingDate - now;
+    if(diff < 0) diff = 0;
+    const d = Math.floor(diff/(1000*60*60*24));
+    const h = Math.floor((diff/(1000*60*60))%24);
+    const m = Math.floor((diff/(1000*60))%60);
+    const s = Math.floor((diff/1000)%60);
+    document.getElementById('cd-days').textContent = String(d).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-mins').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-secs').textContent = String(s).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+  }, {threshold:0.15});
+  revealEls.forEach(el => io.observe(el));
+
+  // RSVP form (demo — no backend yet)
+  document.getElementById('rsvpForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    this.style.display = 'none';
+    document.getElementById('rsvpSuccess').classList.add('show');
+  });
+
+  // Guestbook (demo — session only, not persisted)
+  const gbFeed = document.getElementById('gbFeed');
+  document.getElementById('gbForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('gb-name').value.trim();
+    const msg = document.getElementById('gb-message').value.trim();
+    if(!name || !msg) return;
+    const empty = gbFeed.querySelector('.gb-empty');
+    if(empty) empty.remove();
+    const card = document.createElement('div');
+    card.className = 'gb-msg';
+    card.innerHTML = `<div class="who">${name}</div><div class="msg">${msg}</div>`;
+    gbFeed.prepend(card);
+    this.reset();
+  });
+</script>
+
+</body>
+</html>
