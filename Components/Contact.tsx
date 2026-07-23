@@ -2,14 +2,20 @@
 import { useState } from "react";
 
 const contactInfo = [
-  { label: "Email", value: "kusimo@email.com", icon: "✉" },
+  { label: "Email", value: "estherabisola09@gmail.com", icon: "✉" },
   { label: "Location", value: "Ekiti, Nigeria", icon: "◎" },
   { label: "Availability", value: "Open to work", icon: "◈" },
+];
+
+const socialLinks = [
+  { label: "GitHub", url: "https://github.com/estherabisola09-glitch" },
+  { label: "LinkedIn", url: "https://www.linkedin.com/in/kusimo-esther-233a21246/" },
 ];
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,9 +25,27 @@ export default function Contact() {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) return;
     setStatus("sending");
-    await new Promise((r) => setTimeout(r, 1500));
-    setStatus("sent");
-    setForm({ name: "", email: "", subject: "", message: "" });
+    setErrorMsg(null);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong.");
+      }
+
+      setStatus("sent");
+      setForm({ name: "", email: "", subject: "", message: "" });
+    } catch (err) {
+      setStatus("idle");
+      setErrorMsg(err instanceof Error ? err.message : "Failed to send message.");
+    }
   };
 
   const inputStyle = {
@@ -131,10 +155,12 @@ export default function Contact() {
               Socials
             </div>
             <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              {["GitHub", "LinkedIn", "Twitter"].map((s) => (
+              {socialLinks.map(({ label, url }) => (
                 <a
-                  key={s}
-                  href="#"
+                  key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   style={{
                     fontFamily: "'Orbitron', sans-serif",
                     fontSize: "0.7rem", letterSpacing: "0.08em",
@@ -146,7 +172,7 @@ export default function Contact() {
                     transition: "all 0.2s",
                   }}
                 >
-                  {s}
+                  {label}
                 </a>
               ))}
             </div>
@@ -255,6 +281,9 @@ export default function Contact() {
                   onBlur={(e) => (e.target.style.borderColor = "var(--border)")}
                 />
               </div>
+              {errorMsg && (
+                <p style={{ color: "#ff5555", fontSize: "0.85rem" }}>{errorMsg}</p>
+              )}
               <button
                 onClick={handleSubmit}
                 disabled={status === "sending"}
