@@ -4,13 +4,23 @@ import { useState } from "react";
 
 const projects = [
   {
+    title: "Veritrace",
+    description:
+      "A supply chain traceability platform enabling manufacturers to track products from origin to delivery using QR codes, with a consumer-facing portal to verify authenticity and view a product's full journey. Collaborative project — built the landing page, site branding, and dashboard feature pages (Activity Log, Fraud Alerts, Scan Analytics).",
+    tags: ["Next.js", "TypeScript", "Tailwind", "Zustand", "React Query"],
+    category: "Frontend",
+    live: "https://veritrace-rho.vercel.app/",
+    github: "https://github.com/DanielAgbeni/Veritrace",
+    featured: true,
+  },
+  {
     title: "Portfolio Website",
     description:
       "A futuristic personal portfolio built with Next.js and TypeScript. Features smooth animations, dynamic routing, and a dark tech aesthetic.",
-    tags: ["Next.js", "TypeScript", "CSS"],
+    tags: ["Next.js", "TypeScript"],
     category: "Frontend",
-    live: "#",
-    github: "#",
+    live: "https://kusimo-esther.vercel.app/",
+    github: "https://github.com/estherabisola09-glitch/My-portfolio",
     featured: true,
   },
   {
